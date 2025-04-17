@@ -1,0 +1,63 @@
+# F# specific
+*.exe
+*.dll
+*.pdb
+*.cache
+*.suo
+.vs/
+.vscode/
+.ionide/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# F# build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# IDE specific files
+.idea/
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Local development settings
+appsettings.Development.json
+appsettings.local.json
+secrets.json
+.env
+.env.local
+
+# Fake build files
+.fake/
+
+# Paket
+.paket/
+paket-files/ 
