@@ -16,7 +16,10 @@
     <Compile Include="Repositories\UserRepository.fs" />
     <Compile Include="Services\JwtService.fs" />
     <Compile Include="Services\AuthService.fs" />
-    <Compile Include="Features\AccountModule.fs" />
+    <Compile Include="Features\Account\LoginEndpoint.fs" />
+    <Compile Include="Features\Account\RegisterEndpoint.fs" />
+    <Compile Include="Features\Account\MeEndpoint.fs" />
+    <Compile Include="Features\Account\AccountMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
