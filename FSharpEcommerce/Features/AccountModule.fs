@@ -1,4 +1,4 @@
-namespace FSharpEcommerce.Modules
+namespace FSharpEcommerce.Features
 
 open FSharpEcommerce.Extensions
 open FSharpEcommerce.Models

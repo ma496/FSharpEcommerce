@@ -16,7 +16,7 @@
     <Compile Include="Repositories\UserRepository.fs" />
     <Compile Include="Services\JwtService.fs" />
     <Compile Include="Services\AuthService.fs" />
-    <Compile Include="Modules\AccountModule.fs" />
+    <Compile Include="Features\AccountModule.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,6 @@ open System
 open System.IdentityModel.Tokens.Jwt
 open System.Security.Claims
 open System.Text
-open Microsoft.Extensions.Options
 open Microsoft.IdentityModel.Tokens
 open FSharpEcommerce.Models
 open System.Threading.Tasks

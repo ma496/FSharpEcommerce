@@ -2,10 +2,6 @@ namespace FSharpEcommerce.Extensions
 
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
-open Microsoft.AspNetCore.Authorization
-open Microsoft.AspNetCore.Routing
-open System
-open System.Collections.Generic
 open System.Threading.Tasks
 open System.Runtime.CompilerServices
 
@@ -25,7 +21,6 @@ type RoleAuthorizationFilter(roles: string list) =
             else
                 Results.Forbid() |> ValueTask<obj>
 
-[<Extension>]
 type RouteHandlerBuilderExtensions() =
     [<Extension>]
     static member RequireRoles(builder: RouteHandlerBuilder, roles: string list) =
