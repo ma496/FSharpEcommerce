@@ -23,7 +23,36 @@ type LoginResponse =
       Roles: LoginRoleResponse list }
 
 module LoginModule =
-    let login (connection: IDbConnection) (jwtSettings: JwtSettings) (request: LoginRequest) : Task<IResult> =
+    // Define validators for the login request using our custom validation
+    let private validateLoginRequest (request: LoginRequest) =
+        // Use our validation helpers to validate each field
+        let emailResult =
+            ValidationUtils.Validators.required "email" request.Email
+            |> Result.bind (ValidationUtils.Validators.email "email")
+
+        let passwordResult = ValidationUtils.Validators.required "password" request.Password
+
+        // Combine the validation results
+        match emailResult, passwordResult with
+        | Ok email, Ok password -> Ok { Email = email; Password = password }
+        | _ ->
+            let errors =
+                [ match emailResult with
+                  | Error e -> yield! e
+                  | _ -> ()
+
+                  match passwordResult with
+                  | Error e -> yield! e
+                  | _ -> () ]
+
+            Error errors
+
+    // The actual login handler after validation
+    let private loginHandler
+        (connection: IDbConnection)
+        (jwtSettings: JwtSettings)
+        (request: LoginRequest)
+        : Task<IResult> =
         task {
             let! userOption = UserData.getUserByEmail connection request.Email
 
@@ -47,3 +76,7 @@ module LoginModule =
                                   Username = user.Username }
                               Roles = roles |> List.map (fun role -> { Id = role.Id; Name = role.Name }) }
         }
+
+    // Public login function that first validates the request
+    let login (connection: IDbConnection) (jwtSettings: JwtSettings) (request: LoginRequest) : Task<IResult> =
+        ValidationUtils.validateRequest validateLoginRequest request (loginHandler connection jwtSettings)

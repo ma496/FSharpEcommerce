@@ -5,9 +5,11 @@
   <ItemGroup>
     <Compile Include="Models/AuthModels.fs" />
     <Compile Include="Models/ErrorModels.fs" />
+    <Compile Include="Models/ProductModels.fs" />
     <Compile Include="Utils\DatabaseUtils.fs" />
     <Compile Include="Utils\JwtUtils.fs" />
     <Compile Include="Utils\ResultUtils.fs" />
+    <Compile Include="Utils\ValidationUtils.fs" />
     <Compile Include="Migrations\20250418101_CreateUsersTable.fs" />
     <Compile Include="Migrations\20250418102_CreateRolesTable.fs" />
     <Compile Include="Migrations\20250418103_CreateUserRolesTable.fs" />
@@ -21,6 +23,8 @@
     <Compile Include="Features\Account\RegisterEndpoint.fs" />
     <Compile Include="Features\Account\MeEndpoint.fs" />
     <Compile Include="Features\Account\AccountMapper.fs" />
+    <Compile Include="Features\Products\CreateProductEndpoint.fs" />
+    <Compile Include="Features\Products\ProductMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

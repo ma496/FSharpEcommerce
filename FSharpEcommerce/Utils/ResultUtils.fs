@@ -4,6 +4,8 @@ open System.Text.Json
 open Microsoft.AspNetCore.Http
 open FSharpEcommerce.Models
 
+#nowarn "3391"
+
 /// Utility functions for creating consistent HTTP results
 module ResultUtils =
     /// Serialization options with camelCase property naming
