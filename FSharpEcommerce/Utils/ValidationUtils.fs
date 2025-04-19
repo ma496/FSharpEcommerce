@@ -34,7 +34,7 @@ module ValidationUtils =
             if String.IsNullOrWhiteSpace(value) then
                 Error
                     [ { FieldName = fieldName
-                        Message = sprintf "%s is required" fieldName } ]
+                        Message = $"%s{fieldName} is required" } ]
             else
                 Ok value
 
@@ -45,7 +45,7 @@ module ValidationUtils =
             elif value.Length < minLength then
                 Error
                     [ { FieldName = fieldName
-                        Message = sprintf "%s must be at least %d characters" fieldName minLength } ]
+                        Message = $"%s{fieldName} must be at least %d{minLength} characters" } ]
             else
                 Ok value
 
@@ -56,7 +56,7 @@ module ValidationUtils =
             elif value.Length > maxLength then
                 Error
                     [ { FieldName = fieldName
-                        Message = sprintf "%s cannot exceed %d characters" fieldName maxLength } ]
+                        Message = $"%s{fieldName} cannot exceed %d{maxLength} characters" } ]
             else
                 Ok value
 
@@ -67,7 +67,7 @@ module ValidationUtils =
             elif not (value.Contains("@") && value.Contains(".")) then
                 Error
                     [ { FieldName = fieldName
-                        Message = sprintf "%s must be a valid email address" fieldName } ]
+                        Message = $"%s{fieldName} must be a valid email address" } ]
             else
                 Ok value
 
@@ -76,7 +76,7 @@ module ValidationUtils =
             if value < minValue then
                 Error
                     [ { FieldName = fieldName
-                        Message = sprintf "%s must be at least %A" fieldName minValue } ]
+                        Message = $"%s{fieldName} must be at least %A{minValue}" } ]
             else
                 Ok value
 
@@ -96,15 +96,91 @@ module ValidationUtils =
 
             loop validations value []
 
-    /// Create a validate computation expression for chaining validation functions
+    /// Helper functions for field validation within computation expressions
+    let validateField (field: 'T) (validations: ('T -> ValidationResult<'T>) list) : ValidationResult<'T> =
+        let results = validations |> List.map (fun v -> v field)
+
+        let errors =
+            results
+            |> List.choose (function
+                | Error errs -> Some errs
+                | Ok _ -> None)
+            |> List.concat
+
+        if List.isEmpty errors then Ok field else Error errors
+
+    // Type to accumulate all validation results
+    type ValidationState<'T> =
+        { Value: 'T
+          Errors: ValidationError list }
+
+        static member Success(value: 'T) = { Value = value; Errors = [] }
+        static member WithErrors(value: 'T, errors) = { Value = value; Errors = errors }
+
+        static member AddErrors(state: ValidationState<'T>, errors) =
+            { state with
+                Errors = state.Errors @ errors }
+
+        member this.ToResult() =
+            if List.isEmpty this.Errors then
+                Ok this.Value
+            else
+                Error this.Errors
+
+    // Computation expression that collects all errors
     type ValidateBuilder() =
-        member _.Bind(m: ValidationResult<'T>, f: 'T -> ValidationResult<'U>) : ValidationResult<'U> =
+        member _.Bind(m: ValidationResult<'T>, f: 'T -> ValidationState<'U>) : ValidationState<'U> =
             match m with
             | Ok value -> f value
-            | Error errors -> Error errors
+            | Error errors ->
+                // We need a default state to collect errors
+                let defaultState = f Unchecked.defaultof<'T>
 
-        member _.Return(value: 'T) : ValidationResult<'T> = Ok value
+                { defaultState with
+                    Errors = errors @ defaultState.Errors }
 
-        member _.ReturnFrom(m: ValidationResult<'T>) : ValidationResult<'T> = m
+        member _.Return(value: 'T) : ValidationState<'T> = ValidationState.Success(value)
+
+        member _.ReturnFrom(state: ValidationState<'T>) : ValidationState<'T> = state
+
+        member _.ReturnFrom(result: ValidationResult<'T>) : ValidationState<'T> =
+            match result with
+            | Ok value -> ValidationState.Success(value)
+            | Error errors -> ValidationState.WithErrors(Unchecked.defaultof<'T>, errors)
+
+        member _.Zero() : ValidationState<unit> = ValidationState.Success(())
+
+        member _.Combine(state1: ValidationState<unit>, state2: ValidationState<'T>) : ValidationState<'T> =
+            { state2 with
+                Errors = state1.Errors @ state2.Errors }
+
+        member _.Delay(f: unit -> ValidationState<'T>) : unit -> ValidationState<'T> = f
+
+        member _.Run(f: unit -> ValidationState<'T>) : ValidationResult<'T> =
+            let state = f ()
+            state.ToResult()
+
+        // Let expressions for field validation
+        member this.Let(value: 'T, f: 'T -> ValidationState<'U>) : ValidationState<'U> = f value
+
+        member this.LetField
+            (value: 'T, validations: ('T -> ValidationResult<'T>) list, projection: 'T -> ValidationState<'U>)
+            : ValidationState<'U> =
+            let results = validations |> List.map (fun v -> v value)
+
+            let errors =
+                results
+                |> List.choose (function
+                    | Error errs -> Some errs
+                    | Ok _ -> None)
+                |> List.concat
+
+            let nextState = projection value
+
+            if List.isEmpty errors then
+                nextState
+            else
+                { nextState with
+                    Errors = errors @ nextState.Errors }
 
     let validate = ValidateBuilder()
