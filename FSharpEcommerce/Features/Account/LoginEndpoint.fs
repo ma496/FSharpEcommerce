@@ -28,18 +28,18 @@ module LoginModule =
             let! userOption = UserData.getUserByEmail connection request.Email
 
             match userOption with
-            | None -> return Results.BadRequest "Invalid credentials"
+            | None -> return ResultUtils.unauthorized "Invalid email or password"
             | Some user ->
                 let isPasswordValid = BCrypt.Verify(request.Password, user.PasswordHash)
 
                 if not isPasswordValid then
-                    return Results.BadRequest "Invalid credentials"
+                    return ResultUtils.unauthorized "Invalid email or password"
                 else
                     let! roles = UserData.getUserRoles connection user.Id
                     let! token = JwtUtils.generateToken jwtSettings user roles
 
                     return
-                        Results.Ok
+                        ResultUtils.ok
                             { Token = token
                               User =
                                 { Id = user.Id

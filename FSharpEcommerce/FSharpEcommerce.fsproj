@@ -4,8 +4,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Models/AuthModels.fs" />
+    <Compile Include="Models/ErrorModels.fs" />
     <Compile Include="Utils\DatabaseUtils.fs" />
     <Compile Include="Utils\JwtUtils.fs" />
+    <Compile Include="Utils\ResultUtils.fs" />
     <Compile Include="Migrations\20250418101_CreateUsersTable.fs" />
     <Compile Include="Migrations\20250418102_CreateRolesTable.fs" />
     <Compile Include="Migrations\20250418103_CreateUserRolesTable.fs" />

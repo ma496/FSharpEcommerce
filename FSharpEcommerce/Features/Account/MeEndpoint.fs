@@ -5,6 +5,7 @@ open System.Threading.Tasks
 open System.Data
 open FSharpEcommerce.Data
 open Microsoft.AspNetCore.Http
+open FSharpEcommerce.Utils
 
 type MeUserResponse =
     { Id: int
@@ -21,12 +22,12 @@ module MeModule =
     let me (connection: IDbConnection) (user: ClaimsPrincipal) : Task<IResult> =
         task {
             if not user.Identity.IsAuthenticated then
-                return Results.Unauthorized()
+                return ResultUtils.unauthorized "Authentication required"
             else
                 let userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)
 
                 if userIdClaim = null then
-                    return Results.Unauthorized()
+                    return ResultUtils.unauthorized "Invalid authentication token"
                 else
                     let userId = int userIdClaim.Value
                     let! userOption = UserData.getUserById connection userId
@@ -36,11 +37,11 @@ module MeModule =
                         let! roles = UserData.getUserRoles connection foundUser.Id
 
                         return
-                            Results.Ok
+                            ResultUtils.ok
                                 { User =
                                     { Id = foundUser.Id
                                       Email = foundUser.Email
                                       Username = foundUser.Username }
                                   Roles = roles |> List.map (fun role -> { Id = role.Id; Name = role.Name }) }
-                    | None -> return Results.NotFound()
+                    | None -> return ResultUtils.notFound "User not found"
         }

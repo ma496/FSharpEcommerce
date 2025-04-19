@@ -17,6 +17,10 @@ open System
 open System.Data
 open Microsoft.OpenApi.Models
 open System.Collections.Generic
+open Microsoft.Extensions.Logging
+open Microsoft.AspNetCore.Http
+open Microsoft.AspNetCore.Diagnostics
+open System.Text.Json
 
 module Program =
     [<EntryPoint>]
@@ -132,6 +136,41 @@ module Program =
         runner.MigrateUp()
 
         // Configure the HTTP request pipeline
+
+        // Get logger service for error handling
+        let logger = app.Services.GetRequiredService<ILogger<_>>()
+
+        // Add global error handling middleware (must be added before other middleware)
+        app.UseExceptionHandler("/error") |> ignore
+
+        // Add specific error handling endpoint
+        app.Map(
+            "/error",
+            fun (errorApp: IApplicationBuilder) ->
+                errorApp.Run(fun (context: HttpContext) ->
+                    let exceptionFeature = context.Features.Get<IExceptionHandlerFeature>()
+
+                    if exceptionFeature <> null then
+                        let error = exceptionFeature.Error
+                        context.Response.StatusCode <- 500
+                        context.Response.ContentType <- "application/json"
+
+                        let errorResponse = ApiErrorResponse.serverError error.Message
+                        let jsonOptions = JsonSerializerOptions()
+                        jsonOptions.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+
+                        let jsonResponse = JsonSerializer.Serialize(errorResponse, jsonOptions)
+                        context.Response.WriteAsync(jsonResponse)
+                    else
+                        context.Response.StatusCode <- 500
+                        context.Response.ContentType <- "application/json"
+                        let errorResponse = ApiErrorResponse.serverError "An unknown error occurred"
+                        let jsonOptions = JsonSerializerOptions()
+                        jsonOptions.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+                        let jsonResponse = JsonSerializer.Serialize(errorResponse, jsonOptions)
+                        context.Response.WriteAsync(jsonResponse))
+        )
+        |> ignore
 
         // Add Swagger middleware
         app.UseSwagger() |> ignore

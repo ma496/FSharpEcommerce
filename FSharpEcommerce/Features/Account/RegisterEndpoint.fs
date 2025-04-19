@@ -30,29 +30,41 @@ module RegisterModule =
     let register (connection: IDbConnection) (jwtSettings: JwtSettings) (request: RegisterRequest) : Task<IResult> =
         task {
             try
-                let passwordHash = BCrypt.HashPassword request.Password
+                // Check if email already exists
+                let! existingUser = UserData.getUserByEmail connection request.Email
 
-                let userModel =
-                    { Id = 0
-                      Email = request.Email
-                      PasswordHash = passwordHash
-                      Username = request.Username
-                      CreatedAt = DateTime.UtcNow }
+                match existingUser with
+                | Some _ -> return ResultUtils.conflict "A user with this email already exists"
+                | None ->
+                    // Validate password
+                    if String.IsNullOrWhiteSpace(request.Password) || request.Password.Length < 6 then
+                        return
+                            ResultUtils.validationError
+                                "Password is invalid"
+                                (Map [ "password", "Password must be at least 6 characters" ])
+                    else
+                        let passwordHash = BCrypt.HashPassword request.Password
 
-                let! user = UserData.createUser connection userModel
-                let! roles = UserData.getUserRoles connection user.Id
-                let! token = JwtUtils.generateToken jwtSettings user roles
+                        let userModel =
+                            { Id = 0
+                              Email = request.Email
+                              PasswordHash = passwordHash
+                              Username = request.Username
+                              CreatedAt = DateTime.UtcNow }
 
-                return
-                    Results.Created(
-                        "/account/me",
-                        { Token = token
-                          User =
-                            { Id = user.Id
-                              Email = user.Email
-                              Username = user.Username }
-                          Roles = roles |> List.map (fun role -> { Id = role.Id; Name = role.Name }) }
-                    )
+                        let! user = UserData.createUser connection userModel
+                        let! roles = UserData.getUserRoles connection user.Id
+                        let! token = JwtUtils.generateToken jwtSettings user roles
+
+                        return
+                            ResultUtils.created
+                                "/account/me"
+                                { Token = token
+                                  User =
+                                    { Id = user.Id
+                                      Email = user.Email
+                                      Username = user.Username }
+                                  Roles = roles |> List.map (fun role -> { Id = role.Id; Name = role.Name }) }
             with ex ->
-                return Results.BadRequest ex.Message
+                return ResultUtils.serverError "An unexpected error occurred while registering"
         }
