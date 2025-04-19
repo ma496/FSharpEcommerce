@@ -4,6 +4,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Models/AuthModels.fs" />
+    <Compile Include="Utils\DatabaseUtils.fs" />
+    <Compile Include="Utils\JwtUtils.fs" />
     <Compile Include="Migrations\20250418101_CreateUsersTable.fs" />
     <Compile Include="Migrations\20250418102_CreateRolesTable.fs" />
     <Compile Include="Migrations\20250418103_CreateUserRolesTable.fs" />
@@ -11,11 +13,8 @@
     <Compile Include="Migrations\20250418105_AddDefaultUsers.fs" />
     <Compile Include="Extensions\EndpointsExtension.fs" />
     <Compile Include="Extensions\AuthorizationExtensions.fs" />
-    <Compile Include="Utils\DatabaseUtils.fs" />
-    <Compile Include="Repositories\RoleRepository.fs" />
-    <Compile Include="Repositories\UserRepository.fs" />
-    <Compile Include="Services\JwtService.fs" />
-    <Compile Include="Services\AuthService.fs" />
+    <Compile Include="Data\RoleData.fs" />
+    <Compile Include="Data\UserData.fs" />
     <Compile Include="Features\Account\LoginEndpoint.fs" />
     <Compile Include="Features\Account\RegisterEndpoint.fs" />
     <Compile Include="Features\Account\MeEndpoint.fs" />

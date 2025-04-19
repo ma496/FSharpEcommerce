@@ -9,15 +9,12 @@ open Microsoft.Extensions.Hosting
 open FSharpEcommerce.Extensions
 open FSharpEcommerce.Utils
 open FSharpEcommerce.Models
-open FSharpEcommerce.Services
-open FSharpEcommerce.Repositories
 open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.IdentityModel.Tokens
 open System.Text
 open Npgsql
 open System
 open System.Data
-open Microsoft.AspNetCore.Authorization
 open Microsoft.OpenApi.Models
 open System.Collections.Generic
 
@@ -83,17 +80,11 @@ module Program =
 
         // Register our services
         builder.Services.AddSingleton<JwtSettings>(jwtSettings) |> ignore
-        builder.Services.AddScoped<IJwtService, JwtService>() |> ignore
-        builder.Services.AddScoped<IAuthService, AuthService>() |> ignore
 
         // Register database connection
         builder.Services.AddScoped<IDbConnection>(fun provider ->
             new NpgsqlConnection(connectionString) :> IDbConnection)
         |> ignore
-
-        // Register repositories
-        builder.Services.AddScoped<IUserRepository, UserRepository>() |> ignore
-        builder.Services.AddScoped<IRoleRepository, RoleRepository>() |> ignore
 
         // Add Swagger services
         builder.Services.AddEndpointsApiExplorer() |> ignore

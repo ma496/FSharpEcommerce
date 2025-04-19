@@ -1,32 +1,46 @@
-module MeModule
+namespace FSharpEcommerce.Features.Account
 
 open System.Security.Claims
 open System.Threading.Tasks
-open FSharpEcommerce.Repositories
+open System.Data
+open FSharpEcommerce.Data
 open Microsoft.AspNetCore.Http
 
-let me (userRepository: IUserRepository) (user: ClaimsPrincipal) : Task<IResult> =
-    task {
-        if not user.Identity.IsAuthenticated then
-            return Results.Unauthorized()
-        else
-            let userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)
+type MeUserResponse =
+    { Id: int
+      Email: string
+      Username: string }
 
-            if userIdClaim = null then
+type MeRoleResponse = { Id: int; Name: string }
+
+type MeResponse =
+    { User: MeUserResponse
+      Roles: MeRoleResponse list }
+
+module MeModule =
+    let me (connection: IDbConnection) (user: ClaimsPrincipal) : Task<IResult> =
+        task {
+            if not user.Identity.IsAuthenticated then
                 return Results.Unauthorized()
             else
-                let userId = int userIdClaim.Value
-                let! userOption = userRepository.GetUserById(userId)
+                let userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)
 
-                match userOption with
-                | Some foundUser ->
-                    let! roles = userRepository.GetUserRoles(foundUser.Id)
+                if userIdClaim = null then
+                    return Results.Unauthorized()
+                else
+                    let userId = int userIdClaim.Value
+                    let! userOption = UserData.getUserById connection userId
 
-                    return
-                        Results.Ok(
-                            {| User = foundUser
-                               Token = "" // Token is not returned on me endpoint
-                               Roles = roles |}
-                        )
-                | None -> return Results.NotFound()
-    }
+                    match userOption with
+                    | Some foundUser ->
+                        let! roles = UserData.getUserRoles connection foundUser.Id
+
+                        return
+                            Results.Ok
+                                { User =
+                                    { Id = foundUser.Id
+                                      Email = foundUser.Email
+                                      Username = foundUser.Username }
+                                  Roles = roles |> List.map (fun role -> { Id = role.Id; Name = role.Name }) }
+                    | None -> return Results.NotFound()
+        }

@@ -11,18 +11,6 @@ type Role = { Id: int; Name: string }
 
 type UserRole = { UserId: int; RoleId: int }
 
-type LoginRequest = { Email: string; Password: string }
-
-type RegisterRequest =
-    { Username: string
-      Email: string
-      Password: string }
-
-type AuthResponse =
-    { Token: string
-      User: User
-      Roles: Role list }
-
 type JwtSettings =
     { Secret: string
       Issuer: string
