@@ -3,10 +3,26 @@ namespace FSharpEcommerce.Features.Products
 open System
 open System.Threading.Tasks
 open System.Data
-open FSharpEcommerce.Models
 open FSharpEcommerce.Utils
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Authorization
+
+type CreateProductRequest =
+    { Name: string
+      Description: string
+      Price: decimal
+      StockQuantity: int
+      CategoryId: int }
+
+type ProductResponse =
+    { Id: int
+      Name: string
+      Description: string
+      Price: decimal
+      StockQuantity: int
+      CategoryId: int
+      CreatedAt: DateTime
+      UpdatedAt: DateTime option }
 
 module CreateProductModule =
     /// Define validators for product creation

@@ -1,7 +1,6 @@
 namespace FSharpEcommerce.Features.Products
 
 open FSharpEcommerce.Extensions
-open FSharpEcommerce.Models
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Http
 open System
