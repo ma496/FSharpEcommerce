@@ -1,6 +1,7 @@
 namespace FSharpEcommerce.Migrations
 
 open FluentMigrator
+open Microsoft.FSharp.Linq
 
 [<Migration(20250420101L, "Create Categories Table")>]
 type CreateCategoriesTable() =
@@ -10,9 +11,9 @@ type CreateCategoriesTable() =
         base.Create.Table("Categories")
             .WithColumn("Id").AsInt32().PrimaryKey().Identity()
             .WithColumn("Name").AsString(100).NotNullable().Unique()
-            .WithColumn("Description").AsString(255).NotNullable()
+            .WithColumn("Description").AsString(255).Nullable()
             .WithColumn("CreatedAt").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
-            .WithColumn("UpdatedAt").AsDateTime().NotNullable()
+            .WithColumn("UpdatedAt").AsDateTime().Nullable()
         |> ignore
         
     override _.Down() =

@@ -21,12 +21,12 @@
     <Compile Include="Extensions\AuthorizationExtensions.fs" />
     <Compile Include="Data\RoleData.fs" />
     <Compile Include="Data\UserData.fs" />
+    <Compile Include="Data\CategoryData.fs" />
+    <Compile Include="Data\ProductData.fs" />
     <Compile Include="Features\Account\LoginEndpoint.fs" />
     <Compile Include="Features\Account\RegisterEndpoint.fs" />
     <Compile Include="Features\Account\MeEndpoint.fs" />
     <Compile Include="Features\Account\AccountMapper.fs" />
-    <Compile Include="Features\Products\CreateProductEndpoint.fs" />
-    <Compile Include="Features\Products\ProductMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

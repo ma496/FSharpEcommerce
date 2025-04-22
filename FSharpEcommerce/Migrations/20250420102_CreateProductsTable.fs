@@ -1,6 +1,7 @@
 namespace FSharpEcommerce.Migrations
 
 open FluentMigrator
+open Microsoft.FSharp.Linq
 
 [<Migration(20250420102L, "Create Products Table")>]
 type CreateProductsTable() =
@@ -10,12 +11,12 @@ type CreateProductsTable() =
         base.Create.Table("Products")
             .WithColumn("Id").AsInt32().PrimaryKey().Identity()
             .WithColumn("Name").AsString(100).NotNullable().Unique()
-            .WithColumn("Description").AsString(255).NotNullable()
+            .WithColumn("Description").AsString(255).Nullable()
             .WithColumn("Price").AsDecimal(10, 2).NotNullable()
             .WithColumn("StockQuantity").AsInt32().NotNullable()
             .WithColumn("CategoryId").AsInt32().NotNullable()
             .WithColumn("CreatedAt").AsDateTime().NotNullable().WithDefault(SystemMethods.CurrentUTCDateTime)
-            .WithColumn("UpdatedAt").AsDateTime().NotNullable()
+            .WithColumn("UpdatedAt").AsDateTime().Nullable()
         |> ignore
 
         base.Create
