@@ -71,12 +71,75 @@ module ValidationUtils =
             else
                 Ok value
 
+        /// Simple validation for equal numeric value
+        let equal fieldName (value: 'T) (otherValue: 'T) =
+            if value <> otherValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} must be equal to %A{otherValue}" } ]
+            else
+                Ok value
+
+        /// Simple validation for not equal numeric value
+        let notEqual fieldName (value: 'T) (otherValue: 'T) =
+            if value = otherValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} must not be equal to %A{otherValue}" } ]
+            else
+                Ok value
+
+        /// Simple validation for greater than numeric value
+        let greaterThan fieldName (value: 'T) (otherValue: 'T) =
+            if value <= otherValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} must be greater than %A{otherValue}" } ]
+            else
+                Ok value
+
+        /// Simple validation for greater than or equal numeric value
+        let greaterThanOrEqual fieldName (value: 'T) (otherValue: 'T) =
+            if value < otherValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} must be greater than or equal to %A{otherValue}" } ]
+            else
+                Ok value
+
+        /// Simple validation for less than numeric value
+        let lessThan fieldName (value: 'T) (otherValue: 'T) =
+            if value >= otherValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} must be less than %A{otherValue}" } ]
+            else
+                Ok value
+
+        /// Simple validation for less than or equal numeric value
+        let lessThanOrEqual fieldName (value: 'T) (otherValue: 'T) =
+            if value > otherValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} must be less than or equal to %A{otherValue}" } ]
+            else
+                Ok value
+
         /// Simple validation for minimum numeric value
         let minValue<'T when 'T: comparison> fieldName (minValue: 'T) (value: 'T) =
             if value < minValue then
                 Error
                     [ { FieldName = fieldName
                         Message = $"%s{fieldName} must be at least %A{minValue}" } ]
+            else
+                Ok value
+
+        /// Simple validation for maximum numeric value
+        let maxValue<'T when 'T: comparison> fieldName (maxValue: 'T) (value: 'T) =
+            if value > maxValue then
+                Error
+                    [ { FieldName = fieldName
+                        Message = $"%s{fieldName} cannot exceed %A{maxValue}" } ]
             else
                 Ok value
 

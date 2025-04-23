@@ -12,6 +12,7 @@ type Product =
       CreatedAt: DateTime
       UpdatedAt: DateTime option }
 
+[<CLIMutable>]
 type Category =
     { Id: int
       Name: string

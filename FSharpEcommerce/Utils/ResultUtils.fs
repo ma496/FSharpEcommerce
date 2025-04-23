@@ -22,9 +22,7 @@ module ResultUtils =
     let ok data = success StatusCodes.Status200OK data
 
     /// Creates a success response with 201 Created status
-    let created resourceUrl data =
-        // For simplicity, just return a JSON response with 201 status code
-        // In a real app, you should find a way to set the Location header
+    let created data =
         success StatusCodes.Status201Created data
 
     /// Creates a success response with 204 No Content status

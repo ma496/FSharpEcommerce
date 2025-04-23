@@ -64,7 +64,6 @@ module RegisterModule =
 
                 return
                     ResultUtils.created
-                        "/account/me"
                         { Token = token
                           User =
                             { Id = user.Id

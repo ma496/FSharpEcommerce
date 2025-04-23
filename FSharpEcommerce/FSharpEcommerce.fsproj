@@ -27,6 +27,12 @@
     <Compile Include="Features\Account\RegisterEndpoint.fs" />
     <Compile Include="Features\Account\MeEndpoint.fs" />
     <Compile Include="Features\Account\AccountMapper.fs" />
+    <Compile Include="Features\Categories\GetCategoryEndpoint.fs" />
+    <Compile Include="Features\Categories\GetCategoriesEndpoint.fs" />
+    <Compile Include="Features\Categories\CreateCategoryEndpoint.fs" />
+    <Compile Include="Features\Categories\UpdateCategoryEndpoint.fs" />
+    <Compile Include="Features\Categories\DeleteCategoryEndpoint.fs" />
+    <Compile Include="Features\Categories\CategoryMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

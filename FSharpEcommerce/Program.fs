@@ -128,6 +128,8 @@ module Program =
 
         // Build the app
         let app = builder.Build()
+        
+        Dapper.FSharp.PostgreSQL.OptionTypes.register()
 
         // Run migrations
         use scope = app.Services.CreateScope()
