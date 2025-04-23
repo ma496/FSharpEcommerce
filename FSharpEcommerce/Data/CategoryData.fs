@@ -7,20 +7,18 @@ open FSharpEcommerce.Models
 module CategoryData =
     let getCategories (connection: IDbConnection) =
         task {
-            let! categories =
-                connection.QueryAsync<Category>("SELECT * FROM public.\"Categories\"")
-                |> Async.AwaitTask
+            let sql = """SELECT * FROM "Categories" """
+            let! categories = connection.QueryAsync<Category>(sql) |> Async.AwaitTask
 
             return categories
         }
 
     let getCategoryById (connection: IDbConnection) (id: int) =
         task {
+            let sql = """SELECT * FROM "Categories" WHERE "Id" = @Id"""
+
             let! category =
-                connection.QuerySingleOrDefaultAsync<Category>(
-                    "SELECT * FROM public.\"Categories\" WHERE \"Id\" = @Id",
-                    {| Id = id |}
-                )
+                connection.QuerySingleOrDefaultAsync<Category>(sql, {| Id = id |})
                 |> Async.AwaitTask
 
             return if isNull (box category) then None else Some category
@@ -29,7 +27,7 @@ module CategoryData =
     let createCategory (connection: IDbConnection) (category: Category) =
         task {
             let sql =
-                """INSERT INTO public."Categories" ("Name", "Description", "CreatedAt", "UpdatedAt")
+                """INSERT INTO "Categories" ("Name", "Description", "CreatedAt", "UpdatedAt")
                 VALUES (@Name, @Description, @CreatedAt, @UpdatedAt)
                 RETURNING "Id" """
 
@@ -41,7 +39,7 @@ module CategoryData =
     let updateCategory (connection: IDbConnection) (category: Category) =
         task {
             let sql =
-                """UPDATE public."Categories" 
+                """UPDATE "Categories" 
                 SET "Name" = @Name, "Description" = @Description, "UpdatedAt" = @UpdatedAt 
                 WHERE "Id" = @Id"""
 
@@ -52,9 +50,8 @@ module CategoryData =
 
     let deleteCategory (connection: IDbConnection) (id: int) =
         task {
-            let! _ =
-                connection.ExecuteAsync("DELETE FROM public.\"Categories\" WHERE \"Id\" = @Id", {| Id = id |})
-                |> Async.AwaitTask
+            let sql = """DELETE FROM "Categories" WHERE "Id" = @Id"""
+            let! _ = connection.ExecuteAsync(sql, {| Id = id |}) |> Async.AwaitTask
 
             return ()
         }

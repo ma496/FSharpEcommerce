@@ -15,7 +15,9 @@ type UpdateCategoryRequest = { Name: string; Description: string }
 type UpdateCategoryResponse =
     { Id: int
       Name: string
-      Description: string }
+      Description: string
+      CreatedAt: DateTime
+      UpdatedAt: DateTime option }
 
 module UpdateCategoryModule =
     let private validateUpdateCategoryRequest (request: UpdateCategoryRequest) =
@@ -49,7 +51,9 @@ module UpdateCategoryModule =
                 let response: UpdateCategoryResponse =
                     { Id = updated.Id
                       Name = updated.Name
-                      Description = updated.Description }
+                      Description = updated.Description
+                      CreatedAt = updated.CreatedAt
+                      UpdatedAt = updated.UpdatedAt }
 
                 return ResultUtils.ok response
         }

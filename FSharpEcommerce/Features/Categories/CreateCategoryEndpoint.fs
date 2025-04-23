@@ -15,7 +15,9 @@ type CreateCategoryRequest = { Name: string; Description: string }
 type CreateCategoryResponse =
     { Id: int
       Name: string
-      Description: string }
+      Description: string
+      CreatedAt: DateTime
+      UpdatedAt: DateTime option }
 
 module CreateCategoryModule =
     let private validateCreateCategoryRequest (request: CreateCategoryRequest) =
@@ -40,7 +42,9 @@ module CreateCategoryModule =
             let response: CreateCategoryResponse =
                 { Id = createdCategory.Id
                   Name = createdCategory.Name
-                  Description = createdCategory.Description }
+                  Description = createdCategory.Description
+                  CreatedAt = createdCategory.CreatedAt
+                  UpdatedAt = createdCategory.UpdatedAt }
 
             return ResultUtils.created response
         }
