@@ -1,5 +1,6 @@
 namespace FSharpEcommerce.Models
 
+[<CLIMutable>]
 type User =
     { Id: int
       Username: string
@@ -7,8 +8,10 @@ type User =
       PasswordHash: string
       CreatedAt: System.DateTime }
 
+[<CLIMutable>]
 type Role = { Id: int; Name: string }
 
+[<CLIMutable>]
 type UserRole = { UserId: int; RoleId: int }
 
 type JwtSettings =

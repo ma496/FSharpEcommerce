@@ -2,6 +2,7 @@ namespace FSharpEcommerce.Models
 
 open System
 
+[<CLIMutable>]
 type Product =
     { Id: int
       Name: string
