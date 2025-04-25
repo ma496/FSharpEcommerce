@@ -14,7 +14,11 @@ module ValidationUtils =
     let private mapValidationErrors (validationErrors: ValidationError list) =
         validationErrors
         |> List.groupBy (fun e -> e.FieldName)
-        |> List.map (fun (key, errors) -> (key, errors |> List.map (fun e -> e.Message) |> String.concat "; "))
+        |> List.map (fun (key, errors) ->
+            (key,
+             errors
+             |> List.map (fun e -> e.Message)
+             |> String.concat "; "))
         |> Map.ofList
 
     /// Validates the request with the provided validator and executes the handler if valid
@@ -23,7 +27,9 @@ module ValidationUtils =
             match validate request with
             | Ok validatedRequest -> return! handler validatedRequest
             | Error validationErrors ->
-                let errorsMap = mapValidationErrors validationErrors
+                let errorsMap =
+                    mapValidationErrors validationErrors
+
                 return ResultUtils.validationError "Validation failed" errorsMap
         }
 
@@ -72,7 +78,7 @@ module ValidationUtils =
                 Ok value
 
         /// Simple validation for equal numeric value
-        let equal fieldName (value: 'T) (otherValue: 'T) =
+        let equal fieldName (otherValue: 'T) (value: 'T) =
             if value <> otherValue then
                 Error
                     [ { FieldName = fieldName
@@ -81,7 +87,7 @@ module ValidationUtils =
                 Ok value
 
         /// Simple validation for not equal numeric value
-        let notEqual fieldName (value: 'T) (otherValue: 'T) =
+        let notEqual fieldName (otherValue: 'T) (value: 'T) =
             if value = otherValue then
                 Error
                     [ { FieldName = fieldName
@@ -90,7 +96,7 @@ module ValidationUtils =
                 Ok value
 
         /// Simple validation for greater than numeric value
-        let greaterThan fieldName (value: 'T) (otherValue: 'T) =
+        let greaterThan fieldName (otherValue: 'T) (value: 'T) =
             if value <= otherValue then
                 Error
                     [ { FieldName = fieldName
@@ -99,7 +105,7 @@ module ValidationUtils =
                 Ok value
 
         /// Simple validation for greater than or equal numeric value
-        let greaterThanOrEqual fieldName (value: 'T) (otherValue: 'T) =
+        let greaterThanOrEqual fieldName (otherValue: 'T) (value: 'T) =
             if value < otherValue then
                 Error
                     [ { FieldName = fieldName
@@ -108,7 +114,7 @@ module ValidationUtils =
                 Ok value
 
         /// Simple validation for less than numeric value
-        let lessThan fieldName (value: 'T) (otherValue: 'T) =
+        let lessThan fieldName (otherValue: 'T) (value: 'T) =
             if value >= otherValue then
                 Error
                     [ { FieldName = fieldName
@@ -117,7 +123,7 @@ module ValidationUtils =
                 Ok value
 
         /// Simple validation for less than or equal numeric value
-        let lessThanOrEqual fieldName (value: 'T) (otherValue: 'T) =
+        let lessThanOrEqual fieldName (otherValue: 'T) (value: 'T) =
             if value > otherValue then
                 Error
                     [ { FieldName = fieldName
@@ -161,7 +167,8 @@ module ValidationUtils =
 
     /// Helper functions for field validation within computation expressions
     let validateField (field: 'T) (validations: ('T -> ValidationResult<'T>) list) : ValidationResult<'T> =
-        let results = validations |> List.map (fun v -> v field)
+        let results =
+            validations |> List.map (fun v -> v field)
 
         let errors =
             results
@@ -170,7 +177,10 @@ module ValidationUtils =
                 | Ok _ -> None)
             |> List.concat
 
-        if List.isEmpty errors then Ok field else Error errors
+        if List.isEmpty errors then
+            Ok field
+        else
+            Error errors
 
     // Type to accumulate all validation results
     type ValidationState<'T> =
@@ -229,7 +239,8 @@ module ValidationUtils =
         member this.LetField
             (value: 'T, validations: ('T -> ValidationResult<'T>) list, projection: 'T -> ValidationState<'U>)
             : ValidationState<'U> =
-            let results = validations |> List.map (fun v -> v value)
+            let results =
+                validations |> List.map (fun v -> v value)
 
             let errors =
                 results

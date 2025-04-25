@@ -32,7 +32,7 @@ type ValidationUtilsTests() =
             match result with
             | Error errors ->
                 Assert.Equal(2, errors.Length)
-                Assert.Equal("Email", errors.[0].FieldName)
-                Assert.Equal("Password", errors.[1].FieldName)
+                Assert.Equal("Email", errors[0].FieldName)
+                Assert.Equal("Password", errors[1].FieldName)
             | Ok _ -> Assert.True(false, "Expected validation error")
         }

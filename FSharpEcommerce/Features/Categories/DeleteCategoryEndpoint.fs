@@ -13,7 +13,7 @@ type DeleteCategoryRequest = { Id: int }
 module DeleteCategoryModule =
     let private validateDeleteCategoryRequest (request: DeleteCategoryRequest) =
         validate {
-            let! _ = greaterThan "Id" request.Id 0
+            let! _ = greaterThan "Id" 0 request.Id
             return request
         }
 

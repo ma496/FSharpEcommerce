@@ -33,6 +33,12 @@
     <Compile Include="Features\Categories\UpdateCategoryEndpoint.fs" />
     <Compile Include="Features\Categories\DeleteCategoryEndpoint.fs" />
     <Compile Include="Features\Categories\CategoryMapper.fs" />
+    <Compile Include="Features\Products\GetProductEndpoint.fs" />
+    <Compile Include="Features\Products\GetProductsEndpoint.fs" />
+    <Compile Include="Features\Products\CreateProductEndpoint.fs" />
+    <Compile Include="Features\Products\UpdateProductEndpoint.fs" />
+    <Compile Include="Features\Products\DeleteProductEndpoint.fs" />
+    <Compile Include="Features\Products\ProductMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

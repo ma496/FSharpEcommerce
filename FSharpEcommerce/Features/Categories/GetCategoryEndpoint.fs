@@ -20,7 +20,7 @@ type GetCategoryResponse =
 module GetCategoryModule =
     let private validateGetCategoryRequest (request: GetCategoryRequest) =
         validate {
-            let! _ = greaterThan "Id" request.Id 0
+            let! _ = greaterThan "Id" 0 request.Id
             return request
         }
 
