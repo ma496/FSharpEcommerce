@@ -6,7 +6,7 @@ open System.Net
 open System.Net.Http.Json
 open FSharpEcommerce.Features.Categories
 
-type CategoriesTests(fixture: Fixture) =
+type CategoriesTests(fixture: CustomFixture) =
     inherit TestBase(fixture)
 
     [<Fact>]

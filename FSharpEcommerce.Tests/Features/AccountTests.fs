@@ -7,7 +7,7 @@ open System.Net.Http.Json
 open FSharpEcommerce.Features.Account
 open System.Net.Http.Headers
 
-type AccountTests(fixture: Fixture) =
+type AccountTests(fixture: CustomFixture) =
     inherit TestBase(fixture)
 
     [<Fact>]

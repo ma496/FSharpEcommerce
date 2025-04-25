@@ -7,8 +7,8 @@ open System.Net.Http
 open System.Net.Http.Json
 open FSharpEcommerce.Features.Account
 
-[<Collection("CollectionFixture")>]
-type TestBase(fixture: Fixture) =
+[<Collection("CustomCollectionFixture")>]
+type TestBase(fixture: CustomFixture) =
     member _.CreateClient() =
         let client = fixture.App.CreateClient()
         client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue "application/json")
@@ -44,4 +44,4 @@ type TestBase(fixture: Fixture) =
     member this.UserLogin() =
         this.Login("user@example.com", "User123!")
 
-    interface IClassFixture<Fixture>
+    interface IClassFixture<CustomFixture>

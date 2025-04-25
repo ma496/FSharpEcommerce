@@ -6,7 +6,7 @@ open System.Data
 open Npgsql
 open Microsoft.Extensions.Configuration
 
-type Fixture() =
+type CustomFixture() =
     // Create test web application with Testing environment
     let webAppFactory =
         new CustomWebApplicationFactory()
@@ -21,6 +21,18 @@ type Fixture() =
             services.GetRequiredService<IConfiguration>()
 
         config.GetConnectionString "DefaultConnection"
+
+    do
+
+        // Initialize test data
+        let connection =
+            new NpgsqlConnection(connectionString) :> IDbConnection
+
+        TestDataSeeder.seed connection
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+
+        connection.Dispose()
 
     member _.App = app
 

@@ -8,12 +8,14 @@
 
     <ItemGroup>
         <Compile Include="Setup\CustomWebApplicationFactory.fs" />
-        <Compile Include="Setup\Fixture.fs" />
-        <Compile Include="Setup\CollectionFixture.fs" />
+        <Compile Include="Setup\TestDataSeeder.fs" />
+        <Compile Include="Setup\CustomFixture.fs" />
+        <Compile Include="Setup\CustomCollectionFixture.fs" />
         <Compile Include="Setup\TestBase.fs" />
         <Compile Include="Utils\ValidationUtilsTests.fs" />
         <Compile Include="Features\AccountTests.fs" />
         <Compile Include="Features\CategoriesTests.fs" />
+        <Compile Include="Features\ProductsTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
