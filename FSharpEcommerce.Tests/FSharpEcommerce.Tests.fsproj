@@ -11,6 +11,7 @@
         <Compile Include="Setup\Fixture.fs" />
         <Compile Include="Setup\CollectionFixture.fs" />
         <Compile Include="Setup\TestBase.fs" />
+        <Compile Include="Utils\ValidationUtilsTests.fs" />
         <Compile Include="Features\AccountTests.fs" />
         <Compile Include="Features\CategoriesTests.fs" />
         <Compile Include="Program.fs" />
