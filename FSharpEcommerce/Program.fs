@@ -21,12 +21,14 @@ open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Diagnostics
 open System.Text.Json
+open Microsoft.AspNetCore.Hosting
 
 module Program =
-    [<EntryPoint>]
-    let main args =
-        let builder = WebApplication.CreateBuilder(args)
+    // Marker class for WebApplicationFactory
+    type Marker = class end
 
+    // Extract configuration to a separate function
+    let configureServices (builder: WebApplicationBuilder) =
         // Add services to the container
         let connectionString =
             builder.Configuration.GetConnectionString("DefaultConnection")
@@ -45,9 +47,14 @@ module Program =
         |> ignore
 
         // Configure JWT Authentication
-        let jwtSecret = builder.Configuration["Jwt:Secret"]
-        let jwtIssuer = builder.Configuration["Jwt:Issuer"]
-        let jwtAudience = builder.Configuration["Jwt:Audience"]
+        let jwtSecret =
+            builder.Configuration["Jwt:Secret"]
+
+        let jwtIssuer =
+            builder.Configuration["Jwt:Issuer"]
+
+        let jwtAudience =
+            builder.Configuration["Jwt:Audience"]
 
         let jwtExpiryMinutes =
             match builder.Configuration["Jwt:ExpiryMinutes"] with
@@ -83,7 +90,8 @@ module Program =
         |> ignore
 
         // Register our services
-        builder.Services.AddSingleton<JwtSettings>(jwtSettings) |> ignore
+        builder.Services.AddSingleton<JwtSettings>(jwtSettings)
+        |> ignore
 
         // Register database connection
         builder.Services.AddScoped<IDbConnection>(fun provider ->
@@ -91,7 +99,8 @@ module Program =
         |> ignore
 
         // Add Swagger services
-        builder.Services.AddEndpointsApiExplorer() |> ignore
+        builder.Services.AddEndpointsApiExplorer()
+        |> ignore
 
         builder.Services.AddSwaggerGen(fun options ->
             options.SwaggerDoc(
@@ -117,7 +126,8 @@ module Program =
                 )
             )
 
-            let securityRequirement = OpenApiSecurityRequirement()
+            let securityRequirement =
+                OpenApiSecurityRequirement()
 
             let securityScheme =
                 OpenApiSecurityScheme(Reference = OpenApiReference(Type = ReferenceType.SecurityScheme, Id = "Bearer"))
@@ -126,21 +136,27 @@ module Program =
             options.AddSecurityRequirement(securityRequirement))
         |> ignore
 
-        // Build the app
-        let app = builder.Build()
-        
-        Dapper.FSharp.PostgreSQL.OptionTypes.register()
+        builder
+
+    // Function to configure the application
+    let configureApp (app: WebApplication) =
+        Dapper.FSharp.PostgreSQL.OptionTypes.register ()
 
         // Run migrations
         use scope = app.Services.CreateScope()
-        let runner = scope.ServiceProvider.GetRequiredService<IMigrationRunner>()
+
+        let runner =
+            scope.ServiceProvider.GetRequiredService<IMigrationRunner>()
+
+        let connectionString =
+            app.Configuration.GetConnectionString("DefaultConnection")
+
         DatabaseUtils.createDatabaseIfNotExists connectionString
         runner.MigrateUp()
 
-        // Configure the HTTP request pipeline
-
         // Get logger service for error handling
-        let logger = app.Services.GetRequiredService<ILogger<_>>()
+        let logger =
+            app.Services.GetRequiredService<ILogger<_>>()
 
         // Add global error handling middleware (must be added before other middleware)
         app.UseExceptionHandler("/error") |> ignore
@@ -150,26 +166,37 @@ module Program =
             "/error",
             fun (errorApp: IApplicationBuilder) ->
                 errorApp.Run(fun (context: HttpContext) ->
-                    let exceptionFeature = context.Features.Get<IExceptionHandlerFeature>()
+                    let exceptionFeature =
+                        context.Features.Get<IExceptionHandlerFeature>()
 
                     if exceptionFeature <> null then
                         let error = exceptionFeature.Error
                         context.Response.StatusCode <- 500
                         context.Response.ContentType <- "application/json"
 
-                        let errorResponse = ApiErrorResponse.serverError error.Message
+                        let errorResponse =
+                            ApiErrorResponse.serverError error.Message
+
                         let jsonOptions = JsonSerializerOptions()
                         jsonOptions.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
 
-                        let jsonResponse = JsonSerializer.Serialize(errorResponse, jsonOptions)
+                        let jsonResponse =
+                            JsonSerializer.Serialize(errorResponse, jsonOptions)
+
                         context.Response.WriteAsync(jsonResponse)
                     else
                         context.Response.StatusCode <- 500
                         context.Response.ContentType <- "application/json"
-                        let errorResponse = ApiErrorResponse.serverError "An unknown error occurred"
+
+                        let errorResponse =
+                            ApiErrorResponse.serverError "An unknown error occurred"
+
                         let jsonOptions = JsonSerializerOptions()
                         jsonOptions.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
-                        let jsonResponse = JsonSerializer.Serialize(errorResponse, jsonOptions)
+
+                        let jsonResponse =
+                            JsonSerializer.Serialize(errorResponse, jsonOptions)
+
                         context.Response.WriteAsync(jsonResponse))
         )
         |> ignore
@@ -187,6 +214,19 @@ module Program =
 
         app.MapEndpoints()
 
-        app.Run()
+        app
 
+    // Public function to create and configure a test application
+    let createWebApplication (args: string[]) =
+        let builder =
+            WebApplication.CreateBuilder(args)
+
+        let builder = configureServices builder
+        let app = builder.Build()
+        configureApp app
+
+    [<EntryPoint>]
+    let main args =
+        let app = createWebApplication args
+        app.Run()
         0 // Exit code

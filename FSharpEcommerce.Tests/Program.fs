@@ -1,4 +1,4 @@
-module FSharpEcommerce.Tests.Program
+module Program
 
 open Expecto
 
