@@ -1,7 +1,13 @@
 module Program
 
 open Expecto
+open FSharpEcommerce.Tests
 
 [<EntryPoint>]
 let main args =
-    runTestsInAssemblyWithCLIArgs [] args
+    try
+        runTestsInAssemblyWithCLIArgs [] args |> ignore
+    finally
+        TestServer.dispose ()
+
+    0

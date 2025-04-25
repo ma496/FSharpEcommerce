@@ -1,11 +1,9 @@
 namespace FSharpEcommerce.Tests
 
-open System
-open System.Net.Http
 open Microsoft.AspNetCore.Mvc.Testing
 open FSharpEcommerce
-open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Hosting
+open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 
 /// Custom WebApplicationFactory for testing
@@ -21,25 +19,74 @@ type FSharpEcommerceFactory() =
                 ())
         |> ignore
 
-/// Module for handling integration testing
+// Module for handling integration testing
 module TestServer =
-    /// Creates a test client that can be used to send HTTP requests to the application
-    let createClient () =
-        let factory = new FSharpEcommerceFactory()
+    let private factory =
+        new FSharpEcommerceFactory()
 
+    let private deleteDatabase () =
+        let configuration =
+            factory.Services.GetRequiredService<IConfiguration>()
+
+        let originalConnectionString =
+            configuration.GetConnectionString("DefaultConnection")
+
+        // Extract database name
+        let databaseName =
+            originalConnectionString.Split(';')
+            |> Array.find (fun s -> s.StartsWith "Database=")
+            |> fun s -> s.Split('=')[1]
+
+        // Connect to a different database like 'postgres'
+        let adminConnectionString =
+            originalConnectionString.Replace($"Database={databaseName}", "Database=postgres")
+
+        Npgsql.NpgsqlConnection.ClearAllPools()
+
+        use connection =
+            new Npgsql.NpgsqlConnection(adminConnectionString)
+
+        connection.Open()
+
+        // Step 1: Revoke connect permission
+        use revokeCmd = connection.CreateCommand()
+        revokeCmd.CommandText <- $"REVOKE CONNECT ON DATABASE \"{databaseName}\" FROM public"
+        revokeCmd.ExecuteNonQuery() |> ignore
+
+        // Step 2: Terminate connections
+        use terminateCmd =
+            connection.CreateCommand()
+
+        terminateCmd.CommandText <-
+            $"""
+            SELECT pg_terminate_backend(pid)
+            FROM pg_stat_activity
+            WHERE datname = '{databaseName}' AND pid <> pg_backend_pid()
+        """
+
+        terminateCmd.ExecuteNonQuery() |> ignore
+
+        // Step 3: Drop the database
+        use dropCmd = connection.CreateCommand()
+        dropCmd.CommandText <- $"DROP DATABASE IF EXISTS \"{databaseName}\""
+        dropCmd.ExecuteNonQuery() |> ignore
+
+
+    // Creates a test client that can be used to send HTTP requests to the application
+    let createClient () =
         let client =
             factory.CreateClient(new WebApplicationFactoryClientOptions(AllowAutoRedirect = false))
 
         client.DefaultRequestHeaders.Add("Accept", "application/json")
-        factory, client
+        client
 
-    /// Creates a test client with authorization header set
+    // Creates a test client with authorization header set
     let createAuthenticatedClient (token: string) =
-        let factory, client = createClient ()
+        let client = createClient ()
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}")
-        factory, client
+        client
 
-    /// Disposes the factory and client
-    let dispose (factory: WebApplicationFactory<Program.Marker>, client: HttpClient) =
-        client.Dispose()
+    // Dispose once after all tests
+    let dispose () =
+        deleteDatabase ()
         factory.Dispose()
