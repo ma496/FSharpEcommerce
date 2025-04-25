@@ -4,6 +4,8 @@ open Xunit
 open System.Net.Http.Headers
 open System.Text.Json
 open System.Net.Http
+open System.Net.Http.Json
+open FSharpEcommerce.Features.Account
 
 [<Collection("CollectionFixture")>]
 type TestBase(fixture: Fixture) =
@@ -27,5 +29,19 @@ type TestBase(fixture: Fixture) =
             response.Content.ReadAsStringAsync().Result
 
         this.ToType<'T>(content)
+
+    member this.Login(email: string, password: string) =
+        let client = this.CreateClient()
+
+        let response =
+            client.PostAsJsonAsync("/account/login", {| Email = email; Password = password |}).Result
+
+        this.ToType<LoginResponse> response
+
+    member this.AdminLogin() =
+        this.Login("admin@example.com", "Admin123!")
+
+    member this.UserLogin() =
+        this.Login("user@example.com", "User123!")
 
     interface IClassFixture<Fixture>
