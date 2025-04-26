@@ -18,17 +18,17 @@ module TestDataSeeder =
                 return ()
             else
                 for i in 1..3 do
-                let name = $"Category {i}"
+                    let name = $"Category {i}"
 
-                let category: Category =
-                    { Id = 0
-                      Name = name
-                      Description = ""
-                      CreatedAt = DateTime.UtcNow
-                      UpdatedAt = Some DateTime.UtcNow }
+                    let category: Category =
+                        { Id = 0
+                          Name = name
+                          Description = ""
+                          CreatedAt = DateTime.UtcNow
+                          UpdatedAt = Some DateTime.UtcNow }
 
-                let! _ = CategoryData.createCategory connection category
-                ()
+                    let! _ = CategoryData.createCategory connection category
+                    ()
         }
 
     let private createProducts (connection: IDbConnection) =
@@ -49,26 +49,26 @@ module TestDataSeeder =
                 return ()
             else
                 for i in 1..10 do
-                let name = $"Product {i}"
-                let description = $"Description {i}"
-                let price = decimal (i * 10)
-                let stockQuantity = i * 100
-                // get a random category id
-                let categoryId =
-                    categories.[Random().Next(categories.Length)].Id
+                    let name = $"Product {i}"
+                    let description = $"Description {i}"
+                    let price = decimal (i * 10)
+                    let stockQuantity = i * 100
+                    // get a random category id
+                    let categoryId =
+                        categories.[Random().Next(categories.Length)].Id
 
-                let product: Product =
-                    { Id = 0
-                      Name = name
-                      Description = description
-                      Price = price
-                      StockQuantity = stockQuantity
-                      CategoryId = categoryId
-                      CreatedAt = DateTime.UtcNow
-                      UpdatedAt = Some DateTime.UtcNow }
+                    let product: Product =
+                        { Id = 0
+                          Name = name
+                          Description = description
+                          Price = price
+                          StockQuantity = stockQuantity
+                          CategoryId = categoryId
+                          CreatedAt = DateTime.UtcNow
+                          UpdatedAt = Some DateTime.UtcNow }
 
-                let! _ = ProductData.createProduct connection product
-                ()
+                    let! _ = ProductData.createProduct connection product
+                    ()
         }
 
     let seed (connection: IDbConnection) =

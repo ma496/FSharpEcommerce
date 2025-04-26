@@ -6,6 +6,7 @@
     <Compile Include="Models/AuthModels.fs" />
     <Compile Include="Models/ErrorModels.fs" />
     <Compile Include="Models/ProductModels.fs" />
+    <Compile Include="Models/OrderModels.fs" />
     <Compile Include="Utils\DatabaseUtils.fs" />
     <Compile Include="Utils\JwtUtils.fs" />
     <Compile Include="Utils\ResultUtils.fs" />
@@ -17,6 +18,9 @@
     <Compile Include="Migrations\20250418105_AddDefaultUsers.fs" />
     <Compile Include="Migrations\20250420101_CreateCategoriesTable.fs" />
     <Compile Include="Migrations\20250420102_CreateProductsTable.fs" />
+    <Compile Include="Migrations\20250426101_CreateCustomersTable.fs" />
+    <Compile Include="Migrations\20250426102_CreateOrdersTable.fs" />
+    <Compile Include="Migrations\20250426103_CreateOrderItmesTable.fs" />
     <Compile Include="Extensions\EndpointsExtension.fs" />
     <Compile Include="Extensions\AuthorizationExtensions.fs" />
     <Compile Include="Data\RoleData.fs" />
