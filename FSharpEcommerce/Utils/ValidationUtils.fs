@@ -131,6 +131,25 @@ module ValidationUtils =
             else
                 Ok value
 
+        /// Validates each element in a list using the provided validator function
+        let validateList fieldName (itemValidator: 'T -> ValidationResult<'T>) (list: 'T list) =
+            let errors =
+                list
+                |> List.mapi (fun i item ->
+                    match itemValidator item with
+                    | Ok _ -> []
+                    | Error errs ->
+                        errs
+                        |> List.map (fun e ->
+                            { e with
+                                FieldName = $"%s{fieldName}[%d{i}].%s{e.FieldName}" }))
+                |> List.collect id
+
+            if List.isEmpty errors then
+                Ok list
+            else
+                Error errors
+
         /// Simple validation for minimum numeric value
         let minValue<'T when 'T: comparison> fieldName (minValue: 'T) (value: 'T) =
             if value < minValue then
