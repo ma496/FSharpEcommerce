@@ -17,11 +17,9 @@ open System
 open System.Data
 open Microsoft.OpenApi.Models
 open System.Collections.Generic
-open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Diagnostics
 open System.Text.Json
-open Microsoft.AspNetCore.Hosting
 
 module Program =
     // Marker class for WebApplicationFactory
@@ -80,14 +78,7 @@ module Program =
                     ))
         |> ignore
 
-        // Configure authorization policies
-        builder.Services.AddAuthorization(fun options ->
-            // Add a policy for "Admin" role
-            options.AddPolicy("Admin", fun policy -> policy.RequireRole("Admin") |> ignore)
-
-            // Add a policy for "User" role
-            options.AddPolicy("User", fun policy -> policy.RequireRole("User") |> ignore))
-        |> ignore
+        builder.Services.AddAuthorization() |> ignore
 
         // Register our services
         builder.Services.AddSingleton<JwtSettings>(jwtSettings)
@@ -153,10 +144,6 @@ module Program =
 
         DatabaseUtils.createDatabaseIfNotExists connectionString
         runner.MigrateUp()
-
-        // Get logger service for error handling
-        let logger =
-            app.Services.GetRequiredService<ILogger<_>>()
 
         // Add global error handling middleware (must be added before other middleware)
         app.UseExceptionHandler("/error") |> ignore
