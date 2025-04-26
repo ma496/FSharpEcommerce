@@ -60,9 +60,9 @@ module UpdateProductModule =
         task {
             let! existingProduct = ProductData.getProductById connection id
 
-            match box existingProduct with
-            | null -> return ResultUtils.notFound "Product not found"
-            | _ ->
+            match existingProduct with
+            | None -> return ResultUtils.notFound "Product not found"
+            | Some existingProduct ->
                 let updatedProduct: Product =
                     { Id = id
                       Name = request.Name

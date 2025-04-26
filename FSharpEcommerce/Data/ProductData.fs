@@ -25,7 +25,7 @@ module ProductData =
                 connection.QuerySingleOrDefaultAsync<Product>(sql, {| Id = id |})
                 |> Async.AwaitTask
 
-            return product
+            return if isNull (box product) then None else Some product
         }
 
     let createProduct (connection: IDbConnection) (product: Product) =

@@ -31,9 +31,9 @@ module GetProductModule =
         task {
             let! product = ProductData.getProductById connection request.Id
 
-            match box product with
-            | null -> return ResultUtils.notFound "Product not found"
-            | _ ->
+            match product with
+            | None -> return ResultUtils.notFound "Product not found"
+            | Some product ->
                 let response: GetProductResponse =
                     { Id = product.Id
                       Name = product.Name
