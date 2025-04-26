@@ -27,6 +27,7 @@
     <Compile Include="Data\UserData.fs" />
     <Compile Include="Data\CategoryData.fs" />
     <Compile Include="Data\ProductData.fs" />
+    <Compile Include="Data\CustomerData.fs" />
     <Compile Include="Features\Account\LoginEndpoint.fs" />
     <Compile Include="Features\Account\RegisterEndpoint.fs" />
     <Compile Include="Features\Account\MeEndpoint.fs" />
@@ -43,6 +44,12 @@
     <Compile Include="Features\Products\UpdateProductEndpoint.fs" />
     <Compile Include="Features\Products\DeleteProductEndpoint.fs" />
     <Compile Include="Features\Products\ProductMapper.fs" />
+    <Compile Include="Features\Customers\GetCustomerEndpoint.fs" />
+    <Compile Include="Features\Customers\GetCustomersEndpoint.fs" />
+    <Compile Include="Features\Customers\CreateCustomerEndpoint.fs" />
+    <Compile Include="Features\Customers\UpdateCustomerEndpoint.fs" />
+    <Compile Include="Features\Customers\DeleteCustomerEndpoint.fs" />
+    <Compile Include="Features\Customers\CustomerMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

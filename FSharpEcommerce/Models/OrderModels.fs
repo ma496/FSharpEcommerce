@@ -6,13 +6,13 @@ open System
 type Customer = {
     Id: int
     Name: string
-    Email: string option
-    Phone: string option
-    Address: string option
-    City: string option
-    State: string option
-    ZipCode: string option
-    Country: string option
+    Email: string
+    Phone: string
+    Address: string
+    City: string
+    State: string
+    ZipCode: string
+    Country: string
     CreatedAt: DateTime
     UpdatedAt: DateTime option
 }
