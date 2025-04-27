@@ -71,8 +71,42 @@ module TestDataSeeder =
                     ()
         }
 
+    let private createCustomers (connection: IDbConnection) =
+        task {
+            let customers =
+                CustomerData.getCustomers connection
+                |> Async.AwaitTask
+                |> Async.RunSynchronously
+                |> List.ofSeq
+
+            if customers.Length >= 10 then
+                return ()
+            else
+                for i in 1..10 do
+                    let name = $"Customer {i}"
+                    let email = $"customer{i}@example.com"
+                    let phone = $"1234567890"
+                    let address = $"1234 Main St, Anytown, USA {i}"
+                    let customer: Customer =
+                        { Id = 0
+                          Name = name
+                          Email = email
+                          Phone = phone
+                          Address = address
+                          City = "Anytown"
+                          State = "CA"
+                          ZipCode = "12345"
+                          Country = "USA"
+                          CreatedAt = DateTime.UtcNow
+                          UpdatedAt = Some DateTime.UtcNow }
+
+                    let! _ = CustomerData.createCustomer connection customer
+                    ()
+        }
+
     let seed (connection: IDbConnection) =
         task {
             do! createCategories connection
             do! createProducts connection
+            do! createCustomers connection
         }

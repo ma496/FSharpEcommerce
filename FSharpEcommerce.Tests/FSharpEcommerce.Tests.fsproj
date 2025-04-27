@@ -17,6 +17,7 @@
         <Compile Include="Features\CategoriesTests.fs" />
         <Compile Include="Features\ProductsTests.fs" />
         <Compile Include="Features\CustomerTests.fs" />
+        <Compile Include="Features\OrderTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
