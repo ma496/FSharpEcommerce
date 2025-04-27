@@ -51,7 +51,7 @@ type CreateOrderResponse = {
     Items: CreateOrderItemResponse list
 }
 
-module CreateOrderEndpoint =
+module CreateOrderModule =
     let private validateCreateOrderItemRequest (item: CreateOrderItemRequest) =
         validate {
             let! _ = validateField item.ProductId [greaterThan "ProductId" 0]
@@ -84,7 +84,7 @@ module CreateOrderEndpoint =
                   PaymentMethod = request.PaymentMethod
                   ShippingAddress = request.ShippingAddress
                   BillingAddress = request.BillingAddress
-                  Status = OrderStatus.Pending
+                  Status = OrderStatusHelpers.toString OrderStatus.Pending
                   CreatedAt = DateTime.UtcNow
                   UpdatedAt = None }
 
@@ -99,7 +99,7 @@ module CreateOrderEndpoint =
             RETURNING "Id"
             """
             let! orderId =
-                connection.ExecuteScalarAsync<int>(createOrderSql, {|order with Status = OrderStatusHelpers.toString order.Status|}, transaction)
+                connection.ExecuteScalarAsync<int>(createOrderSql, order, transaction)
                 |> Async.AwaitTask
 
             // create order items
@@ -140,7 +140,7 @@ module CreateOrderEndpoint =
                   CustomerId = newOrder.CustomerId
                   OrderDate = newOrder.OrderDate
                   TotalAmount = newOrder.TotalAmount
-                  Status = OrderStatusHelpers.toString newOrder.Status
+                  Status = newOrder.Status
                   PaymentMethod = newOrder.PaymentMethod
                   ShippingAddress = newOrder.ShippingAddress
                   BillingAddress = newOrder.BillingAddress

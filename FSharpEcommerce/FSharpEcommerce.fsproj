@@ -50,7 +50,11 @@
     <Compile Include="Features\Customers\UpdateCustomerEndpoint.fs" />
     <Compile Include="Features\Customers\DeleteCustomerEndpoint.fs" />
     <Compile Include="Features\Customers\CustomerMapper.fs" />
+    <Compile Include="Features\Orders\GetOrderEndpoint.fs" />
+    <Compile Include="Features\Orders\GetOrdersEndpoint.fs" />
     <Compile Include="Features\Orders\CreateOrderEndpoint.fs" />
+    <Compile Include="Features\Orders\UpdateOrderStatusEndpoint.fs" />
+    <Compile Include="Features\Orders\DeleteOrderEndpoint.fs" />
     <Compile Include="Features\Orders\OrdersMapper.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

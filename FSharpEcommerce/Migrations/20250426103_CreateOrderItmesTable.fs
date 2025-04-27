@@ -1,6 +1,7 @@
 namespace FSharpEcommerce.Migrations
 
 open FluentMigrator
+open System.Data
 
 [<Migration(20250426103L, "Create Order Items Table")>]
 type CreateOrderItemsTable() =
@@ -23,6 +24,7 @@ type CreateOrderItemsTable() =
             .ForeignColumn("OrderId")
             .ToTable("Orders")
             .PrimaryColumn("Id")
+            .OnDelete(Rule.Cascade)
         |> ignore
 
         base.Create

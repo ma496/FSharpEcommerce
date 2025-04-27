@@ -30,7 +30,7 @@ type Order = {
     CustomerId: int
     OrderDate: DateTime
     TotalAmount: decimal
-    Status: OrderStatus
+    Status: string
     PaymentMethod: string
     ShippingAddress: string
     BillingAddress: string
@@ -51,14 +51,14 @@ type OrderItem = {
 
 
 module OrderStatusHelpers =
-    let fromString (s: string) =
+    let fromString (s: string): Result<OrderStatus, string> =
         match s with
-        | "Pending" -> Pending
-        | "Processing" -> Processing
-        | "Shipped" -> Shipped
-        | "Delivered" -> Delivered
-        | "Cancelled" -> Cancelled
-        | _ -> failwithf "Unknown OrderStatus: %s" s
+        | "Pending" -> Ok Pending
+        | "Processing" -> Ok Processing
+        | "Shipped" -> Ok Shipped
+        | "Delivered" -> Ok Delivered
+        | "Cancelled" -> Ok Cancelled
+        | _ -> Error $"Unknown OrderStatus: {s}"
 
     let toString (status: OrderStatus) =
         status.ToString()
