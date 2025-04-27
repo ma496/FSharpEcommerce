@@ -16,7 +16,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // Act
@@ -38,7 +38,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create an order
@@ -87,7 +87,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -105,7 +105,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let request =
@@ -152,7 +152,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let request =
@@ -177,7 +177,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create an order
@@ -230,7 +230,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -252,7 +252,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create an order
@@ -293,7 +293,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create an order
@@ -333,7 +333,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -351,7 +351,7 @@ type OrderTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create an order

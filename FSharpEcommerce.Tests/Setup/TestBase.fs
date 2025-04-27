@@ -31,7 +31,7 @@ type TestBase(fixture: CustomFixture) =
         this.ToType<'T>(content)
 
     member this.Login(email: string, password: string) =
-        let client = this.CreateClient()
+        use client = this.CreateClient()
 
         let response =
             client.PostAsJsonAsync("/account/login", {| Email = email; Password = password |}).Result

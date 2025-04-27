@@ -15,7 +15,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // Act
@@ -37,7 +37,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a customer
@@ -83,7 +83,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -101,7 +101,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let request =
@@ -141,7 +141,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let request =
@@ -167,7 +167,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a customer
@@ -225,7 +225,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -253,7 +253,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a customer
@@ -296,7 +296,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a customer
@@ -332,7 +332,7 @@ type CustomerTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999

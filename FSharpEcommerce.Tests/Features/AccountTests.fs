@@ -14,7 +14,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Register - Should create a new user and return success``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
 
             let randomEmail =
                 System.Guid.NewGuid().ToString "N"
@@ -47,7 +47,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Register - Should return conflict for existing email``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
             let email = "duplicate@example.com"
 
             // First registration
@@ -75,7 +75,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Register - Should validate input``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
 
             let request =
                 {| Username = ""
@@ -93,7 +93,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Login - Should authenticate valid user and return token``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
             let email = "login-test@example.com"
             let password = "Password123!"
 
@@ -127,7 +127,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Login - Should fail with invalid credentials``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
 
             let loginRequest =
                 {| Email = "nonexistent@example.com"
@@ -144,7 +144,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Me - Should return user profile when authenticated``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
 
             // Register a new user
             let email = "me-test@example.com"
@@ -162,7 +162,7 @@ type AccountTests(fixture: CustomFixture) =
                 this.ToType<RegisterResponse> registerResponse
 
             // Set token in auth header
-            let client2 = this.CreateClient()
+            use client2 = this.CreateClient()
             client2.DefaultRequestHeaders.Authorization <- new AuthenticationHeaderValue("Bearer", result.Token)
 
             // Act
@@ -184,7 +184,7 @@ type AccountTests(fixture: CustomFixture) =
     member this.``Me - Should return unauthorized when not authenticated``() =
         task {
             // Arrange
-            let client = this.CreateClient()
+            use client = this.CreateClient()
 
             // Act
             let! response = client.GetAsync("/account/me")

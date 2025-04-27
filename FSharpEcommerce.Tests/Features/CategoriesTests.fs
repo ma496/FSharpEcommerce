@@ -15,7 +15,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // Act
@@ -37,7 +37,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a category
@@ -71,7 +71,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -89,7 +89,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let request =
@@ -117,7 +117,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let request =
@@ -137,7 +137,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a category
@@ -177,7 +177,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
@@ -199,7 +199,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a category
@@ -230,7 +230,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             // First create a category
@@ -260,7 +260,7 @@ type CategoriesTests(fixture: CustomFixture) =
             // Arrange
             let loginResponse = this.AdminLogin()
 
-            let client =
+            use client =
                 this.CreateAuthenticatedClient(loginResponse.Token)
 
             let nonExistentId = 9999
