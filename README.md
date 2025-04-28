@@ -69,11 +69,36 @@ The Swagger UI provides documentation for all available endpoints and allows you
 
 1. Register a new user account (`/account/register`)
 2. Login to get a JWT token (`/account/login`)
+   - Default admin credentials:
+     - Email: admin@example.com
+     - Password: Admin123!
 3. Use the JWT token for authenticated requests by clicking "Authorize" and entering:
    ```
    Bearer your-jwt-token
    ```
 4. Test all available API endpoints
+
+## Testing
+
+The project includes comprehensive test coverage for all API endpoints, ensuring reliability and correctness:
+
+- **Unit Tests**: Test individual components and functions in isolation
+- **Integration Tests**: Verify the correct interaction between components
+- **End-to-End Tests**: Test complete API workflows from request to response
+
+Tests are organized to mirror the API structure, with dedicated test suites for:
+- Account endpoints (registration, login)
+- Product management
+- Category operations
+- Customer data handling
+- Order processing workflows
+
+To run the tests:
+
+```bash
+cd FSharpEcommerce.Tests
+dotnet test
+```
 
 ## API Structure
 
